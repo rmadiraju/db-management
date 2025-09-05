@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Sample Data Insertion -->
+    <changeSet id="sample-data-001" author="db-admin">
+        <comment>Insert sample users data</comment>
+        
+        <insert tableName="users">
+            <column name="username" value="john_doe"/>
+            <column name="email" value="john.doe@example.com"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Doe"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="users">
+            <column name="username" value="jane_smith"/>
+            <column name="email" value="jane.smith@example.com"/>
+            <column name="first_name" value="Jane"/>
+            <column name="last_name" value="Smith"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="users">
+            <column name="username" value="bob_wilson"/>
+            <column name="email" value="bob.wilson@example.com"/>
+            <column name="first_name" value="Bob"/>
+            <column name="last_name" value="Wilson"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+            <column name="is_active" valueBoolean="false"/>
+        </insert>
+        
+        <insert tableName="users">
+            <column name="username" value="alice_brown"/>
+            <column name="email" value="alice.brown@example.com"/>
+            <column name="first_name" value="Alice"/>
+            <column name="last_name" value="Brown"/>
+            <column name="password_hash" value="$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <rollback>
+            <delete tableName="users">
+                <where>username IN ('john_doe', 'jane_smith', 'bob_wilson', 'alice_brown')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="sample-data-002" author="db-admin">
+        <comment>Insert sample products data</comment>
+        
+        <insert tableName="products">
+            <column name="name" value="Laptop Pro 15&quot;"/>
+            <column name="description" value="High-performance laptop with 16GB RAM and 512GB SSD"/>
+            <column name="sku" value="LAPTOP-PRO-15"/>
+            <column name="price" value="1299.99"/>
+            <column name="category_id" value="1"/>
+            <column name="stock_quantity" value="50"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="products">
+            <column name="name" value="Wireless Mouse"/>
+            <column name="description" value="Ergonomic wireless mouse with USB receiver"/>
+            <column name="sku" value="MOUSE-WIRELESS-01"/>
+            <column name="price" value="29.99"/>
+            <column name="category_id" value="2"/>
+            <column name="stock_quantity" value="200"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="products">
+            <column name="name" value="Mechanical Keyboard"/>
+            <column name="description" value="RGB mechanical keyboard with Cherry MX switches"/>
+            <column name="sku" value="KEYBOARD-MECH-01"/>
+            <column name="price" value="149.99"/>
+            <column name="category_id" value="2"/>
+            <column name="stock_quantity" value="75"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="products">
+            <column name="name" value="Monitor 27&quot;"/>
+            <column name="description" value="4K Ultra HD monitor with HDR support"/>
+            <column name="sku" value="MONITOR-27-4K"/>
+            <column name="price" value="399.99"/>
+            <column name="category_id" value="3"/>
+            <column name="stock_quantity" value="30"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <insert tableName="products">
+            <column name="name" value="USB-C Hub"/>
+            <column name="description" value="Multi-port USB-C hub with HDMI, USB-A, and Ethernet"/>
+            <column name="sku" value="HUB-USBC-01"/>
+            <column name="price" value="79.99"/>
+            <column name="category_id" value="4"/>
+            <column name="stock_quantity" value="100"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        
+        <rollback>
+            <delete tableName="products">
+                <where>sku IN ('LAPTOP-PRO-15', 'MOUSE-WIRELESS-01', 'KEYBOARD-MECH-01', 'MONITOR-27-4K', 'HUB-USBC-01')</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database (simulating Aurora)
+  postgres:
+    image: postgres:13
+    container_name: aurora-postgres-localstack
+    environment:
+      POSTGRES_DB: aurora_postgres_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - db-network
+
+  # LocalStack for AWS services simulation
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack-aws
+    environment:
+      - SERVICES=rds,sts
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    ports:
+      - "4566:4566"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/tmp/localstack
+    networks:
+      - db-network
+
+  # Spring Boot Application
+  app:
+    build: .
+    container_name: db-management-app
+    environment:
+      - SPRING_PROFILES_ACTIVE=localstack
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/aurora_postgres_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - AWS_ENDPOINT=http://localstack:4566
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY=test
+      - AWS_SECRET_KEY=test
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - localstack
+    networks:
+      - db-network
+
+volumes:
+  postgres_data:
+  localstack_data:
+
+networks:
+  db-network:
+    driver: bridge

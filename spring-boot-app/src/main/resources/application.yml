@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: db-management-app
+  
+  profiles:
+    active: localstack
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aurora_postgres_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# AWS Configuration for LocalStack
+aws:
+  region: us-east-1
+  endpoint: http://localhost:4566
+  access-key: test
+  secret-key: test
+
+# LocalStack Configuration
+localstack:
+  services:
+    - rds
+    - sts
+  region: us-east-1
+  endpoint: http://localhost:4566
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# Logging
+logging:
+  level:
+    com.example.dbmanagement: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Server configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /api

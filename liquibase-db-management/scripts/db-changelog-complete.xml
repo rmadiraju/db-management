@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Version 1.0: Initial Database Schema -->
+    <changeSet id="1.0-001" author="db-admin">
+        <comment>Create users table using standalone SQL file</comment>
+        
+        <sqlFile path="scripts/ddl/01-create-users-table.sql" 
+                 relativeToChangelogFile="true" 
+                 splitStatements="true" 
+                 endDelimiter=";"/>
+        
+        <rollback>
+            <sql>DROP TABLE IF EXISTS users CASCADE;</sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1.0-002" author="db-admin">
+        <comment>Insert sample users data</comment>
+        
+        <sqlFile path="scripts/dml/01-insert-sample-users.sql" 
+                 relativeToChangelogFile="true" 
+                 splitStatements="true" 
+                 endDelimiter=";"/>
+        
+        <rollback>
+            <sql>DELETE FROM users WHERE username IN ('john_doe', 'jane_smith', 'bob_wilson', 'alice_brown');</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- Version 1.1: Product Catalog -->
+    <changeSet id="1.1-001" author="db-admin">
+        <comment>Create products table using standalone SQL file</comment>
+        
+        <sqlFile path="scripts/ddl/02-create-products-table.sql" 
+                 relativeToChangelogFile="true" 
+                 splitStatements="true" 
+                 endDelimiter=";"/>
+        
+        <rollback>
+            <sql>DROP TABLE IF EXISTS products CASCADE;</sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1.1-002" author="db-admin">
+        <comment>Insert sample products data</comment>
+        
+        <sqlFile path="scripts/dml/02-insert-sample-products.sql" 
+                 relativeToChangelogFile="true" 
+                 splitStatements="true" 
+                 endDelimiter=";"/>
+        
+        <rollback>
+            <sql>DELETE FROM products WHERE sku IN ('LAPTOP-PRO-15', 'MOUSE-WIRELESS-01', 'KEYBOARD-MECH-01', 'MONITOR-27-4K', 'HUB-USBC-01', 'DISCONTINUED-01');</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- Version 2.0: Order Management -->
+    <changeSet id="2.0-001" author="db-admin">
+        <comment>Create orders and order_items tables using standalone SQL file</comment>
+        
+        <sqlFile path="scripts/ddl/03-create-orders-table.sql" 
+                 relativeToChangelogFile="true" 
+                 splitStatements="true" 
+                 endDelimiter=";"/>
+        
+        <rollback>
+            <sql>DROP TABLE IF EXISTS order_items CASCADE;</sql>
+            <sql>DROP TABLE IF EXISTS orders CASCADE;</sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

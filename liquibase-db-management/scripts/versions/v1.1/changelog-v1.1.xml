@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Version 1.1: Product Catalog -->
+    <changeSet id="1.1-001" author="db-admin">
+        <comment>Create products table for product catalog</comment>
+        
+        <createTable tableName="products">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="sku" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="INTEGER"/>
+            <column name="stock_quantity" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <rollback>
+            <dropTable tableName="products"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1.1-002" author="db-admin">
+        <comment>Add check constraints for products table</comment>
+        
+        <addCheckConstraint tableName="products" constraintName="chk_products_price" 
+                           checkCondition="price >= 0"/>
+        
+        <addCheckConstraint tableName="products" constraintName="chk_products_stock" 
+                           checkCondition="stock_quantity >= 0"/>
+        
+        <rollback>
+            <dropCheckConstraint tableName="products" constraintName="chk_products_price"/>
+            <dropCheckConstraint tableName="products" constraintName="chk_products_stock"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1.1-003" author="db-admin">
+        <comment>Create indexes for products table performance</comment>
+        
+        <createIndex tableName="products" indexName="idx_products_sku">
+            <column name="sku"/>
+        </createIndex>
+        
+        <createIndex tableName="products" indexName="idx_products_category">
+            <column name="category_id"/>
+        </createIndex>
+        
+        <createIndex tableName="products" indexName="idx_products_active">
+            <column name="is_active"/>
+        </createIndex>
+        
+        <createIndex tableName="products" indexName="idx_products_price">
+            <column name="price"/>
+        </createIndex>
+        
+        <rollback>
+            <dropIndex tableName="products" indexName="idx_products_sku"/>
+            <dropIndex tableName="products" indexName="idx_products_category"/>
+            <dropIndex tableName="products" indexName="idx_products_active"/>
+            <dropIndex tableName="products" indexName="idx_products_price"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="1.1-004" author="db-admin">
+        <comment>Add comments to products table and columns</comment>
+        
+        <sql>COMMENT ON TABLE products IS 'Products catalog table';</sql>
+        <sql>COMMENT ON COLUMN products.id IS 'Primary key';</sql>
+        <sql>COMMENT ON COLUMN products.sku IS 'Stock Keeping Unit - unique identifier';</sql>
+        <sql>COMMENT ON COLUMN products.price IS 'Product price in decimal format';</sql>
+        <sql>COMMENT ON COLUMN products.stock_quantity IS 'Available stock quantity';</sql>
+        
+        <rollback>
+            <sql>COMMENT ON TABLE products IS NULL;</sql>
+            <sql>COMMENT ON COLUMN products.id IS NULL;</sql>
+            <sql>COMMENT ON COLUMN products.sku IS NULL;</sql>
+            <sql>COMMENT ON COLUMN products.price IS NULL;</sql>
+            <sql>COMMENT ON COLUMN products.stock_quantity IS NULL;</sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
